@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block extra_style %}
+  <style>
+    #play-btn{
+      font-size: 20px;
+      padding: 7px 10px;
+
+    }
+    .wrapper{
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #acacac;
+    }
+    input{
+      border-bottom-right-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    .btn-default{
+      border-bottom-left-radius: 5px;
+      border-top-left-radius: 5px;
+    }
+    .feedback{
+      margin-top: 20px;
+      margin-left: 50px;
+    }
+    .progress{
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="progress" id="{{ level.id }}" data-total="{{ level.problem_set.count }}">
+        <div class="progress-bar" role="progressbar" style="width: 0;">
+        </div>
+      </div>
+      <div class="wrapper" id="answer-form" style="display: none">
+        <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn btn-default" id="play-btn"><i class="fa fa-volume-up"></i></button>
+      </span>
+          <input id="answer-input" class="form-control" type="text">
+        </div>
+        <p id="correct-message" class="feedback" style="display: none">정답입니다!</p>
+        <div id="wrong-message" class="feedback" style="display: none">
+          <p>틀렸습니다.</p>
+        </div>
+      </div>
+      <div class="wrapper" id="info" style="display: none">
+        <p>잘 듣고 정답을 입력해주세요.</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+  <script>
+      problems = [];
+      correct_answers = 0;
+      current_problem = 0;
+
+      {% for problem in object_list %}
+          problems.push("{{ problem }}");
+      {% endfor %}
+
+      function updateProgressBar() {
+          $('.progress-bar').css('width', current_problem/problems.length * 100 + '%');
+      }
+      function playSound(keyword, callback){
+          $.ajax({
+              type: "GET",
+              async: "true",
+              url: "{% url 'app:api-tts' %}",
+              data: "keyword=" + keyword,
+              success: function (res) {
+                  var sound = new Audio("data:audio/wav;base64," + res.content);
+                  sound.onended = callback;
+                  sound.play();
+              },
+              error: function (error) {
+                  alert('오류가 발생했습니다.');
+                  window.location.href = "{% url 'app:home' %}";
+              }
+          });
+      }
+      $(document).ready(function() {
+          if(problems.length < 1){
+              alert('오류가 발생했습니다.');
+              window.location.href = "{% url 'app:home' %}";
+          }
+
+          $('#play-btn').click(function () {
+              playSound(problems[current_problem], function () {
+                  // input focus
+              });
+          });
+
+          $('#answer-input').keypress(function (e) {
+              // 엔터키 이벤트
+              if(e.which == 13){
+                  if($(this).val() == problems[current_problem]){
+                      $('#correct-message').fadeIn(function () {
+                          playSound('정답입니다.', function () {
+                              $('#correct-message').fadeOut(function () {
+                                  $('#answer-input').val('');
+                                  correct_answers++;
+                                  current_problem++;
+                                  updateProgressBar();
+                                  if(current_problem >= problems.length){
+
+                                  }
+                              });
+                          });
+                      });
+                  } else {
+                      $('#wrong-message p').html('정답: ' + problems[current_problem] + '<br>' + '오답: ' + $('#answer-input').val());
+                      $('#answer-input').val('');
+                      $('#wrong-message').fadeIn(function () {
+                          playSound('틀렷습니다.', function () {});
+                          setTimeout(function () {
+                              $('#wrong-message').fadeOut();
+                          }, 3000);
+                      });
+
+                  }
+              }
+          });
+
+          $('#info').fadeIn(function () {
+              var msg = '잘 듣고 정답을 입력해주세요.';
+              playSound(msg, function () {
+                  $('#info').fadeOut(function () {
+                      $('#answer-form').fadeIn(function () {
+                          // play btn click()
+                      });
+                  });
+              });
+          });
+      });
+  </script>
+{% endblock %}
