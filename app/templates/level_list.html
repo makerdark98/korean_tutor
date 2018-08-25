@@ -10,17 +10,14 @@
         <div class="post-preview">
           <a href="{{ level.get_absolute_url }}">
             <h2 class="post-title">
-              {{ forloop.counter }}
+              {{ forloop.counter }} 단계
             </h2>
             <h3 class="post-subtitle">
               {{ level }}
             </h3>
           </a>
-          <p class="post-meta" id="{{ level.id }}">
-            <span class="label label-default">Default</span>
-          </p>
-          <div class="progress" id="{{ level.id }}" data-total="{{ level.problem_set.count }}">
-            <div class="progress-bar" role="progressbar" style="width: 60%;">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" id="{{ level.id }}" >
             </div>
           </div>
         </div>
@@ -32,9 +29,9 @@
 
 {% block extra_script %}
   <script>
-      $('.post-meta').each(function () {
-          if(localStorage.getItem($(this).attr('id')) != undefined){
-              {#$(this).#}
+      $('.progress-bar').each(function () {
+          if(localStorage.getItem('level_' + $(this).attr('id')) != undefined){
+              $(this).css('width', localStorage.getItem('level_' + $(this).attr('id')));
           }
       });
   </script>
