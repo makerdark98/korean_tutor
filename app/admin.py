@@ -1,3 +1,14 @@
 from django.contrib import admin
+from .models import *
 
-# Register your models here.
+
+class ProblemInline(admin.StackedInline):
+    model = Problem
+    extra = 1
+
+
+class LevelAdmin(admin.ModelAdmin):
+    inlines = [ProblemInline,]
+
+
+admin.site.register(Level, LevelAdmin)
