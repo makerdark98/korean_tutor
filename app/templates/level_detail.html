@@ -12,9 +12,12 @@
       border-radius: 5px;
       border: 1px solid #acacac;
     }
-    input{
-      border-bottom-right-radius: 5px;
-      border-top-right-radius: 5px;
+    #answer-input{
+      border-radius: 30px;
+    }
+    #play-btn{
+      border-radius: 30px;
+      margin-right: 10px;
     }
     .btn-default{
       border-bottom-left-radius: 5px;
@@ -22,7 +25,7 @@
     }
     .feedback{
       margin-top: 20px;
-      margin-left: 50px;
+      margin-left: 60px;
     }
     .progress{
       margin-top: 20px;
@@ -34,7 +37,7 @@
 {% block content %}
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
-      <div class="progress" id="{{ level.id }}" data-total="{{ level.problem_set.count }}">
+      <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: 0;">
         </div>
       </div>
@@ -43,7 +46,7 @@
       <span class="input-group-btn">
         <button class="btn btn-default" id="play-btn"><i class="fa fa-volume-up"></i></button>
       </span>
-          <input id="answer-input" class="form-control" type="text">
+          <input id="answer-input" class="form-control" type="text" placeholder="들리는 문장을 입력하세요.">
         </div>
         <p id="correct-message" class="feedback" style="display: none">정답입니다!</p>
         <div id="wrong-message" class="feedback" style="display: none">
@@ -60,8 +63,9 @@
 {% block extra_script %}
   <script>
       problems = [];
-      correct_answers = 0;
       current_problem = 0;
+      current_level = "{{ level }}";
+      sound_mutex = false;
 
       {% for problem in object_list %}
           problems.push("{{ problem }}");
@@ -69,8 +73,12 @@
 
       function updateProgressBar() {
           $('.progress-bar').css('width', current_problem/problems.length * 100 + '%');
+          localStorage.setItem('level_' + current_level, current_problem/problems.length * 100 + '%')
       }
+
       function playSound(keyword, callback){
+          while (sound_mutex)
+          sound_mutex = true;
           $.ajax({
               type: "GET",
               async: "true",
@@ -87,31 +95,46 @@
               }
           });
       }
+
       $(document).ready(function() {
+
           if(problems.length < 1){
               alert('오류가 발생했습니다.');
               window.location.href = "{% url 'app:home' %}";
           }
 
+
           $('#play-btn').click(function () {
+              if(current_problem >= problems.length){
+                  return
+              }
+              $('#play-btn').focus();
               playSound(problems[current_problem], function () {
-                  // input focus
+                  sound_mutex = false;
+                  $('#answer-input').focus();
               });
           });
+
 
           $('#answer-input').keypress(function (e) {
               // 엔터키 이벤트
               if(e.which == 13){
+                  if(current_problem >= problems.length){
+                      return
+                  }
                   if($(this).val() == problems[current_problem]){
                       $('#correct-message').fadeIn(function () {
                           playSound('정답입니다.', function () {
+                              sound_mutex = false;
                               $('#correct-message').fadeOut(function () {
                                   $('#answer-input').val('');
-                                  correct_answers++;
                                   current_problem++;
                                   updateProgressBar();
                                   if(current_problem >= problems.length){
-
+                                      alert("축하합니다!\n" + current_level + "단계를 완료하였습니다!");
+                                      window.location.href = "{% url "app:level_list" %}";
+                                  } else{
+                                      $('#play-btn').click();
                                   }
                               });
                           });
@@ -120,26 +143,33 @@
                       $('#wrong-message p').html('정답: ' + problems[current_problem] + '<br>' + '오답: ' + $('#answer-input').val());
                       $('#answer-input').val('');
                       $('#wrong-message').fadeIn(function () {
-                          playSound('틀렷습니다.', function () {});
+                          playSound('틀렷습니다.', function () {
+                              sound_mutex = false;
+                          });
                           setTimeout(function () {
-                              $('#wrong-message').fadeOut();
-                          }, 3000);
+                              $('#wrong-message').fadeOut(function () {
+                                  $('#play-btn').click();
+                              });
+                          }, 2000);
                       });
 
                   }
               }
           });
 
+
           $('#info').fadeIn(function () {
               var msg = '잘 듣고 정답을 입력해주세요.';
               playSound(msg, function () {
+                  sound_mutex = false;
                   $('#info').fadeOut(function () {
                       $('#answer-form').fadeIn(function () {
-                          // play btn click()
+                          $('#play-btn').click();
                       });
                   });
               });
           });
+
       });
   </script>
 {% endblock %}
