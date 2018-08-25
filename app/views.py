@@ -18,6 +18,11 @@ class LevelDetailView(ListView):
     template_name = 'level_detail.html'
     model = Problem
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(LevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        context['level'] = self.kwargs.get('pk')
+        return context
+
     def get_queryset(self):
         level = self.kwargs.get('pk')
         return super(LevelDetailView, self).get_queryset().filter(level=level)
