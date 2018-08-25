@@ -77,7 +77,9 @@
       }
 
       function playSound(keyword, callback){
-          while (sound_mutex)
+          if(sound_mutex){
+              return
+          }
           sound_mutex = true;
           $.ajax({
               type: "GET",
@@ -131,8 +133,10 @@
                                   current_problem++;
                                   updateProgressBar();
                                   if(current_problem >= problems.length){
-                                      alert("축하합니다!\n" + current_level + "단계를 완료하였습니다!");
-                                      window.location.href = "{% url "app:level_list" %}";
+                                      setTimeout(function () {
+                                          alert("축하합니다!\n" + current_level + "단계를 완료하였습니다!");
+                                          window.location.href = "{% url "app:level_list" %}";
+                                      }, 1000);
                                   } else{
                                       $('#play-btn').click();
                                   }
