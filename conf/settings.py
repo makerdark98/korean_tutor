@@ -121,3 +121,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
+# ADAMs.ai secret key
+TTS_KEY = os.environ.get('TTS_KEY')
+TTS_URL = 'http://api.datamixi.com/datamixiApi/tts'
