@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      {% for level in object_list %}
+        <div class="post-preview">
+          <a href="{{ level.get_absolute_url }}">
+            <h2 class="post-title">
+              {{ forloop.counter }}
+            </h2>
+            <h3 class="post-subtitle">
+              {{ level }}
+            </h3>
+          </a>
+          <p class="post-meta" id="{{ level.id }}">
+            <span class="label label-default">Default</span>
+          </p>
+          <div class="progress" id="{{ level.id }}" data-total="{{ level.problem_set.count }}">
+            <div class="progress-bar" role="progressbar" style="width: 60%;">
+            </div>
+          </div>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+  <script>
+      $('.post-meta').each(function () {
+          if(localStorage.getItem($(this).attr('id')) != undefined){
+              {#$(this).#}
+          }
+      });
+  </script>
+{% endblock %}
