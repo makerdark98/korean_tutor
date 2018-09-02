@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block extra_style %}
+{% endblock %}
+
+
+{% block subheading %}
+  {% if made_by_user %}
+    사용자들이 직접 만든 받아쓰기 목록입니다
+  {% else %}
+    단계별로 학습할 수 있는 받아쓰기 목록입니다
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -10,16 +19,21 @@
         <div class="post-preview">
           <a href="{{ level.get_absolute_url }}">
             <h2 class="post-title">
-              {{ forloop.counter }} 단계
+              {{ level.title }}
             </h2>
             <h3 class="post-subtitle">
-              {{ level }}
+              {{ level.content }}
             </h3>
-          </a>
-          <div class="progress">
-            <div class="progress-bar" role="progressbar" id="{{ level.id }}" >
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" id="{{ level.id }}" >
+              </div>
             </div>
-          </div>
+            {% if made_by_user %}
+              <p class="post-meta">
+                {{ level.created | naturaltime }}
+              </p>
+            {% endif %}
+          </a>
         </div>
         <hr>
       {% endfor %}
