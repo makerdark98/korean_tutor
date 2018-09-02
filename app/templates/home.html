@@ -85,7 +85,7 @@
           </h3>
         </div>
         <div class="col-md-4 text-right">
-          <a class="btn btn-primary">단계별 학습 바로가기</a>
+          <a class="btn btn-primary" href="{% url 'app:level_list' %}">단계별 학습 바로가기</a>
         </div>
         <hr class="col-md-12">
       </div>
@@ -99,7 +99,7 @@
           </h3>
         </div>
         <div class="col-md-4 text-right">
-          <a class="btn btn-primary">모두의 받아쓰기 바로가기</a>
+          <a class="btn btn-primary"href="{% url 'app:level_list' %}?made_by_user=True">모두의 받아쓰기 바로가기</a>
         </div>
         <hr class="col-md-12">
       </div>
@@ -113,7 +113,7 @@
           </h3>
         </div>
         <div class="col-md-4 text-right">
-          <a class="btn btn-primary">받아쓰기 만들기 바로가기</a>
+          <a class="btn btn-primary" href="{% url 'app:level_create' %}">받아쓰기 만들기 바로가기</a>
         </div>
         <hr class="col-md-12">
       </div>
