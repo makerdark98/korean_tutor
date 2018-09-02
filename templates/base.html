@@ -19,8 +19,8 @@
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
-    <!-- Custom styles for this template -->
-    <link href="{% static "css/clean-blog.min.css" %}" rel="stylesheet">
+    {#    <!-- Custom styles for this template -->#}
+    <link href="{% static "css/clean-blog.css" %}" rel="stylesheet">
     {% block extra_style %}
     {% endblock %}
   </head>
@@ -41,7 +41,10 @@
               <a class="nav-link" href="{% url 'app:level_list' %}">단계별 받아쓰기</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'app:stt' %}">직접 받아쓰기</a>
+              <a class="nav-link" href="{% url 'app:level_list' %}?made_by_user=True">모두의 받아쓰기</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'app:level_create' %}">받아쓰기 만들기</a>
             </li>
           </ul>
         </div>
@@ -49,14 +52,14 @@
     </nav>
 
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('{% static "img/bg.jpeg" %}')">
+    <header class="masthead" style="background-image: url('{% static "img/BG.jpg" %}')">
       <div class="overlay"></div>
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-md-10 mx-auto">
             <div class="site-heading">
               <h1>모두의 받아쓰기</h1>
-              <span class="subheading">한글을 배우고 싶은 모두를 위한 인공지능 받아쓰기</span>
+              <span class="subheading">{% block subheading %}한글을 배우고 싶은 모두를 위한 인공지능 받아쓰기{% endblock %}</span>
             </div>
           </div>
         </div>
@@ -64,10 +67,10 @@
     </header>
 
     <!-- Main Content -->
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
+    {% block content %}
+      <div class="container">
+      </div>
+    {% endblock %}
 
     <hr>
 
