@@ -35,26 +35,39 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-lg-8 col-md-10 mx-auto">
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 0;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <div class="post-preview">
+          <a href="{{ level.get_absolute_url }}">
+            <h2 class="post-title">
+              {{ level.title }}
+            </h2>
+            <h3 class="post-subtitle">
+              {{ level.content }}
+            </h3>
+          </a>
         </div>
-      </div>
-      <div class="wrapper" id="answer-form" style="display: none">
-        <div class="input-group">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 0;">
+          </div>
+        </div>
+        <hr>
+        <div class="wrapper" id="answer-form" style="display: none">
+          <div class="input-group">
       <span class="input-group-btn">
         <button class="btn btn-default" id="play-btn"><i class="fa fa-volume-up"></i></button>
       </span>
-          <input id="answer-input" class="form-control" type="text" placeholder="들리는 문장을 입력하세요.">
+            <input id="answer-input" class="form-control" type="text" placeholder="들리는 문장을 입력하세요.">
+          </div>
+          <p id="correct-message" class="feedback" style="display: none">정답입니다!</p>
+          <div id="wrong-message" class="feedback" style="display: none">
+            <p>틀렸습니다.</p>
+          </div>
         </div>
-        <p id="correct-message" class="feedback" style="display: none">정답입니다!</p>
-        <div id="wrong-message" class="feedback" style="display: none">
-          <p>틀렸습니다.</p>
+        <div class="wrapper" id="info" style="display: none">
+          <p>잘 듣고 정답을 입력해주세요.</p>
         </div>
-      </div>
-      <div class="wrapper" id="info" style="display: none">
-        <p>잘 듣고 정답을 입력해주세요.</p>
       </div>
     </div>
   </div>
@@ -64,7 +77,7 @@
   <script>
       problems = [];
       current_problem = 0;
-      current_level = "{{ level }}";
+      current_level = "{{ level.id }}";
       sound_mutex = false;
 
       {% for problem in object_list %}
