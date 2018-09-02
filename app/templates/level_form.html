@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block extra_style %}
+  <style>
+    .problem-lebel{
+      margin-bottom: 20px;
+    }
+    .btn{
+      border-radius: 5px;
+    }
+  </style>
+{% endblock %}
+
+{% block subheading %}
+  받아쓰기를 직접 만들어 모두와 함께 풀어보세요!
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <form method="post" action=".">
+        {% csrf_token %}
+        <div class="row text-center">
+          <div class="col-md-2">
+            <label for="{{ form.title.id_for_label }}">제목</label>
+          </div>
+          <div class="col-md-10">
+            {{ form.title }}
+          </div>
+          <hr class="col-md-12">
+          <div class="col-md-2">
+            <label for="{{ form.content.id_for_label }}">내용</label>
+          </div>
+          <div class="col-md-10">
+            {{ form.content }}
+          </div>
+          <hr class="col-md-12">
+          {% for i in '12345'%}
+            <div class="col-md-2 problem-lebel">
+              <label>{{ i }}.</label>
+            </div>
+            <div class="col-md-10">
+              <input class="form-control" required name="problem" maxlength="50" placeholder="문제를 입력해주세요">
+            </div>
+          {% endfor %}
+          <div class="col-md-12 text-right">
+            <button type="submit" class="btn btn-primary">받아쓰기 만들기</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
