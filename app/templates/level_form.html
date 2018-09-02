@@ -7,6 +7,9 @@
     .btn{
       border-radius: 5px;
     }
+    .form-control{
+      margin-bottom: 20px;
+    }
   </style>
 {% endblock %}
 
@@ -15,11 +18,11 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
+  <div class="row" style="padding: 10px">
     <div class="col-lg-8 col-md-10 mx-auto">
       <form method="post" action=".">
         {% csrf_token %}
-        <div class="row text-center">
+        <div class="row">
           <div class="col-md-2">
             <label for="{{ form.title.id_for_label }}">제목</label>
           </div>
