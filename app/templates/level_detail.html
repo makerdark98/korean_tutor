@@ -147,7 +147,7 @@
                                   updateProgressBar();
                                   if(current_problem >= problems.length){
                                       setTimeout(function () {
-                                          alert("축하합니다!\n" + current_level + "단계를 완료하였습니다!");
+                                          alert("축하합니다!\n" + '{{ level.title }}' + "을(를) 완료하였습니다!");
                                           window.location.href = "{% url "app:level_list" %}";
                                       }, 1000);
                                   } else{
