@@ -10,6 +10,17 @@
     .form-control{
       margin-bottom: 20px;
     }
+    .item-delete-btn{
+      padding: 6px 10px;
+      background-color: white;
+      border: 1px solid #ced4da;
+    }
+    .add-btn{
+      width: 100%;
+      background-color: white;
+      border: 1px solid #ced4da;
+      margin-bottom: 20px;
+    }
   </style>
 {% endblock %}
 
@@ -37,16 +48,24 @@
             {{ form.content }}
           </div>
           <hr class="col-md-12">
-          {% for i in '12345'%}
-            <div class="col-md-2 problem-lebel">
-              <label>{{ i }}.</label>
+          <div class="col-md-12 row input-wrapper">
+            <div class="col-md-12 row input-item">
+              <div class="col-md-2 problem-lebel">
+                <label>1.</label>
+              </div>
+              <div class="col-md-9">
+                <input class="form-control" required name="problem" maxlength="50" placeholder="문제를 입력해주세요">
+              </div>
+              <div class="col-md-1">
+                <button type="button" class="btn btn-default item-delete-btn">삭제 <span class="fa fa-times-circle"></span></button>
+              </div>
             </div>
-            <div class="col-md-10">
-              <input class="form-control" required name="problem" maxlength="50" placeholder="문제를 입력해주세요">
-            </div>
-          {% endfor %}
+          </div>
+          <div class="col-md-12">
+            <button type="button" id="add-item-btn" class="btn btn-default add-btn">추가 <span class="fa fa-plus-circle"></span></button>
+          </div>
           <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-primary">받아쓰기 만들기</button>
+            <button type="submit" class="btn btn-info">받아쓰기 만들기</button>
           </div>
         </div>
       </form>
@@ -55,4 +74,23 @@
 {% endblock %}
 
 {% block extra_script %}
+  <script>
+      $('#add-item-btn').click(function () {
+          var $input_item = $('.input-item').first().clone();
+          $input_item.find('input').val('');
+          $('.input-wrapper').append($input_item);
+          $('.input-item').each(function () {
+              $(this).find('label').html($(this).index() + 1 + '.');
+          });
+      });
+
+      $(document).on('click','.item-delete-btn', function() {
+          if($('.item-delete-btn').length > 1){
+              $(this).parent().parent().remove();
+              $('.input-item').each(function () {
+                  $(this).find('label').html($(this).index() + 1 + '.');
+              });
+          }
+      });
+  </script>
 {% endblock %}
